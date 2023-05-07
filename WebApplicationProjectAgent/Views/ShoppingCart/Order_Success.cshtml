@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewBag.Title = "Order_Success";
+}
+
+<body>
+    <h2>Order Success</h2>
+    <h4>Bills of your had been sent.</h4>
+    <a class="btn btn-success" href="@Url.Action("Index", "Home")">Countinue Ordering...</a>
+    <br /> <br />
+    <p>IF YOU CHOOSE THE VNPAY METHOD. PLEASE CLICK BUTTON BELOW HERE TO CONTINUE...</p>
+    <a class="btn btn-success" href="@Url.Action("Payment","ShoppingCart")">VNPay Payment Gate</a>
+</body>
+
+

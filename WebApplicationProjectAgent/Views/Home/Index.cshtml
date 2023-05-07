@@ -1,0 +1,42 @@
+﻿@model IEnumerable<WebApplicationProjectAgent.Models.Good>
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    button {
+        background-color: #007AFF;
+        color: #FFFFFF;
+        padding: 7px 15px;
+        margin-left: 10px;
+        margin-top: 10px;
+        margin-bottom: 5px;
+        border: none;
+        border-radius: 3px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .card {
+        text-align: center;
+    }
+</style>
+<h2>Index</h2>
+<div class="container">
+    <div class="row">
+        @foreach(var item in Model)
+         {
+            <div class=" col-sm-6 col-md-4 col-lg-3">
+                <div class="card">
+                    @Html.DisplayFor(model=>item.GoodsName)
+                    
+                    <br />
+                    Price: @Html.DisplayFor(model=>item.Selling_Price)
+                    <br />
+                    <a href="/ShoppingCart/AddtoCart/@item.GoodsID">
+                        <button class="button_add">Add</button>
+                    </a>
+                </div>
+            </div>
+         }
+    </div>
+</div>

@@ -1,0 +1,543 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="SellingPhoneModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Accountant">
+          <Key>
+            <PropertyRef Name="AccountantID" />
+          </Key>
+          <Property Name="AccountantID" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="AccountantName" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="PasswordAccountant" Type="varchar" MaxLength="40" />
+          <Property Name="Email" Type="varchar" MaxLength="40" />
+          <Property Name="Roles" Type="varchar" MaxLength="40" />
+        </EntityType>
+        <EntityType Name="Agent">
+          <Key>
+            <PropertyRef Name="AgentID" />
+          </Key>
+          <Property Name="AgentID" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="AgentName" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="AgentEmail" Type="varchar" MaxLength="255" />
+          <Property Name="PasswordAgent" Type="varchar" MaxLength="40" />
+          <Property Name="Roles" Type="varchar" MaxLength="40" />
+        </EntityType>
+        <EntityType Name="DeliveryNote">
+          <Key>
+            <PropertyRef Name="DeliveryNoteID" />
+          </Key>
+          <Property Name="DeliveryNoteID" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="AccountantID" Type="char" MaxLength="5" />
+          <Property Name="OrderID" Type="int" />
+        </EntityType>
+        <EntityType Name="Goods">
+          <Key>
+            <PropertyRef Name="GoodsID" />
+          </Key>
+          <Property Name="GoodsID" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="GoodsName" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="Cost_Price" Type="int" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="Selling_Price" Type="int" />
+        </EntityType>
+        <EntityType Name="GoodsReceived">
+          <Key>
+            <PropertyRef Name="ReceivedID" />
+          </Key>
+          <Property Name="ReceivedID" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="Date" Type="date" />
+          <Property Name="Total_Price" Type="int" />
+        </EntityType>
+        <EntityType Name="OrderDetail">
+          <Key>
+            <PropertyRef Name="OrderID" />
+            <PropertyRef Name="GoodsID" />
+          </Key>
+          <Property Name="OrderID" Type="int" Nullable="false" />
+          <Property Name="GoodsID" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="Selling_Price" Type="int" />
+        </EntityType>
+        <EntityType Name="Orders">
+          <Key>
+            <PropertyRef Name="OrderID" />
+          </Key>
+          <Property Name="OrderID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="date" />
+          <Property Name="Status" Type="varchar" MaxLength="40" />
+          <Property Name="PaymentMethod" Type="varchar" MaxLength="40" />
+          <Property Name="AgentID" Type="char" MaxLength="5" />
+          <Property Name="Order_Total_Price" Type="int" />
+          <Property Name="PaymentStatus" Type="varchar" MaxLength="40" />
+        </EntityType>
+        <EntityType Name="Receipt">
+          <Key>
+            <PropertyRef Name="GoodsID" />
+            <PropertyRef Name="ReceivedID" />
+          </Key>
+          <Property Name="GoodsID" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="ReceivedID" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="AccountantID" Type="char" MaxLength="5" />
+          <Property Name="Price" Type="int" />
+        </EntityType>
+        <Association Name="FK__DeliveryN__Accou__35BCFE0A">
+          <End Role="Accountant" Type="Self.Accountant" Multiplicity="0..1" />
+          <End Role="DeliveryNote" Type="Self.DeliveryNote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Accountant">
+              <PropertyRef Name="AccountantID" />
+            </Principal>
+            <Dependent Role="DeliveryNote">
+              <PropertyRef Name="AccountantID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__DeliveryN__Order__36B12243">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
+          <End Role="DeliveryNote" Type="Self.DeliveryNote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="OrderID" />
+            </Principal>
+            <Dependent Role="DeliveryNote">
+              <PropertyRef Name="OrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__OrderDeta__Goods__38996AB5">
+          <End Role="Goods" Type="Self.Goods" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Goods">
+              <PropertyRef Name="GoodsID" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="GoodsID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__OrderDeta__Order__37A5467C">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="OrderID" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="OrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Orders__AgentID__3D5E1FD2">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="AgentID" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="AgentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Receipt__Account__34C8D9D1">
+          <End Role="Accountant" Type="Self.Accountant" Multiplicity="0..1" />
+          <End Role="Receipt" Type="Self.Receipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Accountant">
+              <PropertyRef Name="AccountantID" />
+            </Principal>
+            <Dependent Role="Receipt">
+              <PropertyRef Name="AccountantID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Receipt__GoodsID__33D4B598">
+          <End Role="Goods" Type="Self.Goods" Multiplicity="1" />
+          <End Role="Receipt" Type="Self.Receipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Goods">
+              <PropertyRef Name="GoodsID" />
+            </Principal>
+            <Dependent Role="Receipt">
+              <PropertyRef Name="GoodsID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SellingPhoneModelStoreContainer">
+          <EntitySet Name="Accountant" EntityType="Self.Accountant" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Agent" EntityType="Self.Agent" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DeliveryNote" EntityType="Self.DeliveryNote" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Goods" EntityType="Self.Goods" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GoodsReceived" EntityType="Self.GoodsReceived" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrderDetail" EntityType="Self.OrderDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Receipt" EntityType="Self.Receipt" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__DeliveryN__Accou__35BCFE0A" Association="Self.FK__DeliveryN__Accou__35BCFE0A">
+            <End Role="Accountant" EntitySet="Accountant" />
+            <End Role="DeliveryNote" EntitySet="DeliveryNote" />
+          </AssociationSet>
+          <AssociationSet Name="FK__DeliveryN__Order__36B12243" Association="Self.FK__DeliveryN__Order__36B12243">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="DeliveryNote" EntitySet="DeliveryNote" />
+          </AssociationSet>
+          <AssociationSet Name="FK__OrderDeta__Goods__38996AB5" Association="Self.FK__OrderDeta__Goods__38996AB5">
+            <End Role="Goods" EntitySet="Goods" />
+            <End Role="OrderDetail" EntitySet="OrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK__OrderDeta__Order__37A5467C" Association="Self.FK__OrderDeta__Order__37A5467C">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="OrderDetail" EntitySet="OrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Orders__AgentID__3D5E1FD2" Association="Self.FK__Orders__AgentID__3D5E1FD2">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Receipt__Account__34C8D9D1" Association="Self.FK__Receipt__Account__34C8D9D1">
+            <End Role="Accountant" EntitySet="Accountant" />
+            <End Role="Receipt" EntitySet="Receipt" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Receipt__GoodsID__33D4B598" Association="Self.FK__Receipt__GoodsID__33D4B598">
+            <End Role="Goods" EntitySet="Goods" />
+            <End Role="Receipt" EntitySet="Receipt" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SellingPhoneModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Accountant">
+          <Key>
+            <PropertyRef Name="AccountantID" />
+          </Key>
+          <Property Name="AccountantID" Type="String" MaxLength="5" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="AccountantName" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PasswordAccountant" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Roles" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="DeliveryNotes" Relationship="Self.FK__DeliveryN__Accou__35BCFE0A" FromRole="Accountant" ToRole="DeliveryNote" />
+          <NavigationProperty Name="Receipts" Relationship="Self.FK__Receipt__Account__34C8D9D1" FromRole="Accountant" ToRole="Receipt" />
+        </EntityType>
+        <EntityType Name="Agent">
+          <Key>
+            <PropertyRef Name="AgentID" />
+          </Key>
+          <Property Name="AgentID" Type="String" MaxLength="5" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="AgentName" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AgentEmail" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="PasswordAgent" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Roles" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__AgentID__3D5E1FD2" FromRole="Agent" ToRole="Orders" />
+        </EntityType>
+        <EntityType Name="DeliveryNote">
+          <Key>
+            <PropertyRef Name="DeliveryNoteID" />
+          </Key>
+          <Property Name="DeliveryNoteID" Type="String" MaxLength="5" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="AccountantID" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="OrderID" Type="Int32" />
+          <NavigationProperty Name="Accountant" Relationship="Self.FK__DeliveryN__Accou__35BCFE0A" FromRole="DeliveryNote" ToRole="Accountant" />
+          <NavigationProperty Name="Order" Relationship="Self.FK__DeliveryN__Order__36B12243" FromRole="DeliveryNote" ToRole="Orders" />
+        </EntityType>
+        <EntityType Name="Good">
+          <Key>
+            <PropertyRef Name="GoodsID" />
+          </Key>
+          <Property Name="GoodsID" Type="String" MaxLength="5" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="GoodsName" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Cost_Price" Type="Int32" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="Selling_Price" Type="Int32" />
+          <NavigationProperty Name="OrderDetails" Relationship="Self.FK__OrderDeta__Goods__38996AB5" FromRole="Goods" ToRole="OrderDetail" />
+          <NavigationProperty Name="Receipts" Relationship="Self.FK__Receipt__GoodsID__33D4B598" FromRole="Goods" ToRole="Receipt" />
+        </EntityType>
+        <EntityType Name="GoodsReceived">
+          <Key>
+            <PropertyRef Name="ReceivedID" />
+          </Key>
+          <Property Name="ReceivedID" Type="String" MaxLength="5" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Precision="0" />
+          <Property Name="Total_Price" Type="Int32" />
+        </EntityType>
+        <EntityType Name="OrderDetail">
+          <Key>
+            <PropertyRef Name="OrderID" />
+            <PropertyRef Name="GoodsID" />
+          </Key>
+          <Property Name="OrderID" Type="Int32" Nullable="false" />
+          <Property Name="GoodsID" Type="String" MaxLength="5" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="Selling_Price" Type="Int32" />
+          <NavigationProperty Name="Good" Relationship="Self.FK__OrderDeta__Goods__38996AB5" FromRole="OrderDetail" ToRole="Goods" />
+          <NavigationProperty Name="Order" Relationship="Self.FK__OrderDeta__Order__37A5467C" FromRole="OrderDetail" ToRole="Orders" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="OrderID" />
+          </Key>
+          <Property Name="OrderID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Precision="0" />
+          <Property Name="Status" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="PaymentMethod" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="AgentID" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="Order_Total_Price" Type="Int32" />
+          <Property Name="PaymentStatus" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Agent" Relationship="Self.FK__Orders__AgentID__3D5E1FD2" FromRole="Orders" ToRole="Agent" />
+          <NavigationProperty Name="DeliveryNotes" Relationship="Self.FK__DeliveryN__Order__36B12243" FromRole="Orders" ToRole="DeliveryNote" />
+          <NavigationProperty Name="OrderDetails" Relationship="Self.FK__OrderDeta__Order__37A5467C" FromRole="Orders" ToRole="OrderDetail" />
+        </EntityType>
+        <EntityType Name="Receipt">
+          <Key>
+            <PropertyRef Name="GoodsID" />
+            <PropertyRef Name="ReceivedID" />
+          </Key>
+          <Property Name="GoodsID" Type="String" MaxLength="5" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="ReceivedID" Type="String" MaxLength="5" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="AccountantID" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="Price" Type="Int32" />
+          <NavigationProperty Name="Accountant" Relationship="Self.FK__Receipt__Account__34C8D9D1" FromRole="Receipt" ToRole="Accountant" />
+          <NavigationProperty Name="Good" Relationship="Self.FK__Receipt__GoodsID__33D4B598" FromRole="Receipt" ToRole="Goods" />
+        </EntityType>
+        <Association Name="FK__DeliveryN__Accou__35BCFE0A">
+          <End Role="Accountant" Type="Self.Accountant" Multiplicity="0..1" />
+          <End Role="DeliveryNote" Type="Self.DeliveryNote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Accountant">
+              <PropertyRef Name="AccountantID" />
+            </Principal>
+            <Dependent Role="DeliveryNote">
+              <PropertyRef Name="AccountantID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Receipt__Account__34C8D9D1">
+          <End Role="Accountant" Type="Self.Accountant" Multiplicity="0..1" />
+          <End Role="Receipt" Type="Self.Receipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Accountant">
+              <PropertyRef Name="AccountantID" />
+            </Principal>
+            <Dependent Role="Receipt">
+              <PropertyRef Name="AccountantID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Orders__AgentID__3D5E1FD2">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="AgentID" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="AgentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__DeliveryN__Order__36B12243">
+          <End Role="Orders" Type="Self.Order" Multiplicity="0..1" />
+          <End Role="DeliveryNote" Type="Self.DeliveryNote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="OrderID" />
+            </Principal>
+            <Dependent Role="DeliveryNote">
+              <PropertyRef Name="OrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__OrderDeta__Goods__38996AB5">
+          <End Role="Goods" Type="Self.Good" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Goods">
+              <PropertyRef Name="GoodsID" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="GoodsID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Receipt__GoodsID__33D4B598">
+          <End Role="Goods" Type="Self.Good" Multiplicity="1" />
+          <End Role="Receipt" Type="Self.Receipt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Goods">
+              <PropertyRef Name="GoodsID" />
+            </Principal>
+            <Dependent Role="Receipt">
+              <PropertyRef Name="GoodsID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__OrderDeta__Order__37A5467C">
+          <End Role="Orders" Type="Self.Order" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="OrderID" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="OrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SellingPhoneEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Accountants" EntityType="Self.Accountant" />
+          <EntitySet Name="Agents" EntityType="Self.Agent" />
+          <EntitySet Name="DeliveryNotes" EntityType="Self.DeliveryNote" />
+          <EntitySet Name="Goods" EntityType="Self.Good" />
+          <EntitySet Name="GoodsReceiveds" EntityType="Self.GoodsReceived" />
+          <EntitySet Name="OrderDetails" EntityType="Self.OrderDetail" />
+          <EntitySet Name="Orders" EntityType="Self.Order" />
+          <EntitySet Name="Receipts" EntityType="Self.Receipt" />
+          <AssociationSet Name="FK__DeliveryN__Accou__35BCFE0A" Association="Self.FK__DeliveryN__Accou__35BCFE0A">
+            <End Role="Accountant" EntitySet="Accountants" />
+            <End Role="DeliveryNote" EntitySet="DeliveryNotes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Receipt__Account__34C8D9D1" Association="Self.FK__Receipt__Account__34C8D9D1">
+            <End Role="Accountant" EntitySet="Accountants" />
+            <End Role="Receipt" EntitySet="Receipts" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Orders__AgentID__3D5E1FD2" Association="Self.FK__Orders__AgentID__3D5E1FD2">
+            <End Role="Agent" EntitySet="Agents" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__DeliveryN__Order__36B12243" Association="Self.FK__DeliveryN__Order__36B12243">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="DeliveryNote" EntitySet="DeliveryNotes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__OrderDeta__Goods__38996AB5" Association="Self.FK__OrderDeta__Goods__38996AB5">
+            <End Role="Goods" EntitySet="Goods" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Receipt__GoodsID__33D4B598" Association="Self.FK__Receipt__GoodsID__33D4B598">
+            <End Role="Goods" EntitySet="Goods" />
+            <End Role="Receipt" EntitySet="Receipts" />
+          </AssociationSet>
+          <AssociationSet Name="FK__OrderDeta__Order__37A5467C" Association="Self.FK__OrderDeta__Order__37A5467C">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SellingPhoneModelStoreContainer" CdmEntityContainer="SellingPhoneEntities1">
+          <EntitySetMapping Name="Accountants">
+            <EntityTypeMapping TypeName="SellingPhoneModel.Accountant">
+              <MappingFragment StoreEntitySet="Accountant">
+                <ScalarProperty Name="AccountantID" ColumnName="AccountantID" />
+                <ScalarProperty Name="AccountantName" ColumnName="AccountantName" />
+                <ScalarProperty Name="PasswordAccountant" ColumnName="PasswordAccountant" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Roles" ColumnName="Roles" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Agents">
+            <EntityTypeMapping TypeName="SellingPhoneModel.Agent">
+              <MappingFragment StoreEntitySet="Agent">
+                <ScalarProperty Name="AgentID" ColumnName="AgentID" />
+                <ScalarProperty Name="AgentName" ColumnName="AgentName" />
+                <ScalarProperty Name="AgentEmail" ColumnName="AgentEmail" />
+                <ScalarProperty Name="PasswordAgent" ColumnName="PasswordAgent" />
+                <ScalarProperty Name="Roles" ColumnName="Roles" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DeliveryNotes">
+            <EntityTypeMapping TypeName="SellingPhoneModel.DeliveryNote">
+              <MappingFragment StoreEntitySet="DeliveryNote">
+                <ScalarProperty Name="DeliveryNoteID" ColumnName="DeliveryNoteID" />
+                <ScalarProperty Name="AccountantID" ColumnName="AccountantID" />
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Goods">
+            <EntityTypeMapping TypeName="SellingPhoneModel.Good">
+              <MappingFragment StoreEntitySet="Goods">
+                <ScalarProperty Name="GoodsID" ColumnName="GoodsID" />
+                <ScalarProperty Name="GoodsName" ColumnName="GoodsName" />
+                <ScalarProperty Name="Cost_Price" ColumnName="Cost_Price" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Selling_Price" ColumnName="Selling_Price" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GoodsReceiveds">
+            <EntityTypeMapping TypeName="SellingPhoneModel.GoodsReceived">
+              <MappingFragment StoreEntitySet="GoodsReceived">
+                <ScalarProperty Name="ReceivedID" ColumnName="ReceivedID" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Total_Price" ColumnName="Total_Price" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderDetails">
+            <EntityTypeMapping TypeName="SellingPhoneModel.OrderDetail">
+              <MappingFragment StoreEntitySet="OrderDetail">
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+                <ScalarProperty Name="GoodsID" ColumnName="GoodsID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Selling_Price" ColumnName="Selling_Price" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="SellingPhoneModel.Order">
+              <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+                <ScalarProperty Name="AgentID" ColumnName="AgentID" />
+                <ScalarProperty Name="Order_Total_Price" ColumnName="Order_Total_Price" />
+                <ScalarProperty Name="PaymentStatus" ColumnName="PaymentStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Receipts">
+            <EntityTypeMapping TypeName="SellingPhoneModel.Receipt">
+              <MappingFragment StoreEntitySet="Receipt">
+                <ScalarProperty Name="GoodsID" ColumnName="GoodsID" />
+                <ScalarProperty Name="ReceivedID" ColumnName="ReceivedID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="AccountantID" ColumnName="AccountantID" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

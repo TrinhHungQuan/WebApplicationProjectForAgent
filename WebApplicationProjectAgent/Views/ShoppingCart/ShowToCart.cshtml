@@ -1,0 +1,94 @@
+﻿@model WebApplicationProjectAgent.Models.Cart
+
+
+@{
+    ViewBag.Title = "ShowToCart";
+}
+
+<h2>ShowToCart</h2>
+@if (Model != null) 
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Good Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Model.Items)
+            {
+                int total = item.order_product.Selling_Price.Value * item.order_quantity;
+                <tr>
+                    <td>
+                        @Html.DisplayFor(model => item.order_product.GoodsName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => item.order_product.Selling_Price)
+                    </td>
+                    <td>
+                        @using (Html.BeginForm("Update_Quantity_Cart", "ShoppingCart"))
+                        {
+                            <input type="hidden" value="@item.order_product.GoodsID" name="ID_Good"/>
+                            <input type="number" value="@item.order_quantity" name="Quantity" />
+                            <input type="submit" value="Update Quantity"  />
+                        }
+
+                    </td>
+                    <td>
+                        Total: @total
+                    </td>
+                    <td>
+                        <a href="/ShoppingCart/RemoveCart/@item.order_product.GoodsID">Remove</a>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2"></td>
+                <td colspan="4" style="text-align:center">
+                    @using (Html.BeginForm("CheckOut", "ShoppingCart"))
+                    {
+                        <table>
+                            <tr>
+                                <td>Enter Agent ID for Confirmation: </td>
+                                <td>
+                                    <input type="text" name="CodeCustomer" required />
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Please choose the payment method: </td>
+                                <td>
+                                    <select name="PaymentMethod">
+                                        <option value="">Payment Method: </option>
+                                        <option value="cash">Cash</option>
+                                        <option value="bank_transfer">Bank Transfer</option>
+                                        <option value="momo">Momo</option>
+                                        <option value="VNPay">VNPay</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <input type="submit" value="Checkout" class="btn btn-success" />
+                                </td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5" style="text-align:right">Total Price of Order: @Model.Total_Money()</td>
+            </tr>
+        </tfoot>
+    </table>
+    <a href="@Url.Action("Index", "Home")">Countinue to Order</a>
+}

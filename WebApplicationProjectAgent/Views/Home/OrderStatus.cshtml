@@ -1,0 +1,24 @@
+﻿@model IEnumerable<WebApplicationProjectAgent.Models.Order>
+@{
+    ViewBag.Title = "OrderStatus";
+}
+
+<h2>OrderStatus</h2>
+
+<div class="container">
+    <div class="row">
+        @foreach(var item in Model)
+         {
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="card">
+                    <p><strong>OrderID:</strong> @Html.DisplayFor(model => item.OrderID)</p>
+
+                    <p><strong>Date:</strong> @Html.DisplayFor(model=>item.Date)</p>
+                    
+                    <p><strong>Status:</strong> @Html.DisplayFor(model => item.Status)</p>
+
+                </div>
+            </div>
+         }
+    </div>
+</div>
